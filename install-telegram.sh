@@ -9,8 +9,8 @@
 # Date:   2022-05-26
 #
 
-VERSION=$(curl -s https://github.com/telegramdesktop/tdesktop/releases/latest \
-    | cut -d\" -f2 | cut -dv -f2)
+VERSION=$(curl -sv https://github.com/telegramdesktop/tdesktop/releases/latest 2>&1 \
+    | grep location: | cut -d/ -f8 | cut -dv -f2 | tr -d '\r\n')
 FILE="tsetup.$VERSION.tar.xz"
 URL="https://updates.tdesktop.com/tlinux/$FILE"
 DIR=$(pwd)
