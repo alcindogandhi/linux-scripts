@@ -10,14 +10,14 @@
 #
 
 URL=https://yt-dl.org/downloads/latest/youtube-dl
-DEST=$HOME/bin
+DEST=/usr/local/bin
 
-mkdir -p $DEST
-wget -N $URL -P $DEST
-sed -i '1 s/python/python3/' $DEST/youtube-dl
-chmod +x $DEST/youtube-dl
+sudo mkdir -p $DEST
+sudo wget -q -N $URL -O $DEST/youtube-dl
+sudo sed -i '1 s/python/python3/' $DEST/youtube-dl
+sudo chmod +x $DEST/youtube-dl
 
-VERSION=$($HOME/bin/youtube-dl --version)
+VERSION=$($DEST/youtube-dl --version)
 echo "youtube-dl $VERSION"
 echo
 
