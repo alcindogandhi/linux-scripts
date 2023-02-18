@@ -1,5 +1,24 @@
 #!/bin/sh
 #
+# Instalação do script de upgrade do sistema
+#
+# Nome: Alcindo Gandhi
+# Data: 18/02/2023
+#
+
+FILE="/usr/local/sbin/upgrade"
+
+if [ "$(id -u)" != "0" ]; then
+   echo "Este script deve ser executado como root." 1>&2
+   exit 1
+fi
+
+cat <<EOF >$FILE
+#!/bin/sh
+#
+# Script de atualização do sistema
+#
+
 if [ "$(id -u)" != "0" ]; then
    echo "Este script deve ser executado como root." 1>&2
    exit 1
@@ -27,4 +46,11 @@ apt-get -y autoremove
 
 echo
 echo "Atualizacao efetuada com sucesso."
+echo
+EOF
+
+chmod +x $FILE
+
+echo
+echo "Script de atualização do sistema instalado com sucesso."
 echo
