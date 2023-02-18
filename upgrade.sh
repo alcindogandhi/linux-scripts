@@ -5,27 +5,26 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-apt update
+apt-get update
 if [ $? -ne 0 ]; then
     echo "Falha na atualização do repositório."
 	exit 2
 fi
 
-apt dist-upgrade -dy
+apt-get -dy dist-upgrade
 if [ $? -ne 0 ]; then
     echo "Falha no download dos pacotes."
 	exit 3
 fi
 
-apt dist-upgrade -y
+apt-get -y dist-upgrade
 if [ $? -ne 0 ]; then
     echo "Falha na atualização dos pacotes."
 	exit 4
 fi
 
-apt autoremove -y
+apt-get -y autoremove
 
 echo
 echo "Atualizacao efetuada com sucesso."
 echo
-
