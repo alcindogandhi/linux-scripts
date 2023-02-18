@@ -19,6 +19,7 @@ snap remove gnome-3-38-2004
 snap remove gtk-common-themes
 snap remove snap-store
 snap remove snapd-desktop-integration
+snap remove software-boutique ubuntu-mate-welcome
 snap remove bare
 snap remove core20
 snap remove snapd
