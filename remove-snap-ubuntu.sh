@@ -35,7 +35,7 @@ Pin-Priority: 1001
 ' | tee /etc/apt/preferences.d/mozilla-firefox
 echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' \
 	| tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
-apt-get -y install firefox firefox-locale-pt
+apt-get -y install firefox-esr firefox-esr-locale-pt
 
 # Instalando o Flatpak e a GNOME Software
 apt-get -y --no-install-recommends install \
