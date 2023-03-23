@@ -15,6 +15,16 @@ URL=$(curl -s $URL | grep Multiplataforma | grep $YEAR | cut -d\" -f4)
 FILE=$(basename $URL)
 FILE_DIR="IRPF$YEAR"
 
+# Se o script estiver sendo executado com permissão de root, instala no sistema.
+# Senãoo, instala na pasta do usuário.
+if [ "$(id -u)" = "0" ]; then
+    RFB=/opt/ProgramasRFB
+    MENU=/usr/share/applications
+else
+    RFB=$HOME/ProgramasRFB
+    MENU=$HOME/.local/share/applications
+fi
+
 cd /tmp
 rm -f $FILE
 printf "Efetuando o download do arquivo nos servidores da Receita Federal ... "
@@ -29,10 +39,14 @@ fi
 
 echo "Ok"
 echo "Instalando o programa"
-cd ~/ProgramasRFB
+cd $RFB
 wget -q -O rfb.ico https://raw.githubusercontent.com/alcindogandhi/linux-scripts/main/img/rfb.ico
+rm -fr $FILE_DIR
 unzip -qo /tmp/$FILE
 rm -f /tmp/$FILE
+chmod 755 $FILE_DIR
+find $FILE_DIR -type d -exec chmod 755 {} \;
+find $FILE_DIR -type f -exec chmod 644 {} \;
 cd $FILE_DIR
 
 cat <<EOF >irpf-$YEAR.desktop
@@ -49,12 +63,11 @@ Type=Application
 Terminal=0
 EOF
 
-cd /usr/share/applications
-sudo ln -fs $HOME/ProgramasRFB/IRPF$YEAR/irpf-$YEAR.desktop
+cd $MENU
+ln -fs $RFB/IRPF$YEAR/irpf-$YEAR.desktop
 
 cd $DIR
 
 echo
 echo "IRPF $YEAR instalado com sucesso."
 echo
-
