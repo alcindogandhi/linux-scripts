@@ -7,7 +7,6 @@
 #
 
 OS_RELEASE="/etc/os-release"
-ID=$(cat $OS_RELEASE | grep "^ID=" | cut -d'=' -f2)
 VERSION_CODENAME=$(cat $OS_RELEASE | grep "^VERSION_CODENAME" | cut -d'=' -f2)
 UBUNTU_CODENAME=$(cat $OS_RELEASE  | grep "^UBUNTU_CODENAME"  | cut -d'=' -f2)
 CODENAME=${1:-$([ -z $UBUNTU_CODENAME ] && echo $VERSION_CODENAME || echo $UBUNTU_CODENAME)}
