@@ -11,7 +11,6 @@ VERSION_CODENAME=$(cat $OS_RELEASE | grep "^VERSION_CODENAME" | cut -d'=' -f2)
 UBUNTU_CODENAME=$(cat $OS_RELEASE  | grep "^UBUNTU_CODENAME"  | cut -d'=' -f2)
 CODENAME=${1:-$([ -z $UBUNTU_CODENAME ] && echo $VERSION_CODENAME || echo $UBUNTU_CODENAME)}
 DISTRO=$([ -z $UBUNTU_CODENAME ] && echo "debian" || echo "ubuntu")
-if
 
 sudo apt-get -y remove docker docker-engine docker.io containerd runc
 
