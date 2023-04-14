@@ -6,8 +6,12 @@
 # Data:  2022-04-15
 #
 
-UBUNTU_CODENAME=$(cat /etc/os-release  | grep "^UBUNTU_CODENAME"  | cut -d'=' -f2)
+OS_RELEASE="/etc/os-release"
+VERSION_CODENAME=$(cat $OS_RELEASE | grep "^VERSION_CODENAME" | cut -d'=' -f2)
+UBUNTU_CODENAME=$(cat $OS_RELEASE  | grep "^UBUNTU_CODENAME"  | cut -d'=' -f2)
+CODENAME=${1:-$([ -z $UBUNTU_CODENAME ] && echo $VERSION_CODENAME || echo $UBUNTU_CODENAME)}
 DISTRO=$([ -z $UBUNTU_CODENAME ] && echo "debian" || echo "ubuntu")
+if
 
 sudo apt-get -y remove docker docker-engine docker.io containerd runc
 
@@ -20,7 +24,7 @@ curl -fsSL "https://download.docker.com/linux/$DISTRO/gpg" \
 echo "deb [arch=$(dpkg --print-architecture) \
 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
 https://download.docker.com/linux/$DISTRO \
-$(lsb_release -cs) stable" \
+$CODENAME stable" \
 	| sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 sudo apt-get update
