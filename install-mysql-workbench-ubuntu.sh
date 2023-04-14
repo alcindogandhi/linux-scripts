@@ -33,12 +33,18 @@ if [ -n "$REQUIREMENTS" ]; then
 fi
 
 DIR=$(pwd)
-UBUNTU_RELEASE=$(cat /etc/lsb-release  | grep RELEASE | cut -d'=' -f2)
+ID=$(cat /etc/os-release | grep "^ID=" | cut -d'=' -f2)
+if [ $ID = "ubuntu" ]; then
+    UBUNTU_RELEASE=$(cat /etc/lsb-release  | grep RELEASE | cut -d'=' -f2)
+else
+    UBUNTU_RELEASE=$(cat /etc/upstream-release/lsb-release  | grep RELEASE | cut -d'=' -f2)
+fi
 VERSION=$(curl -s https://dev.mysql.com/downloads/workbench/ | grep "h1" | cut -d'>' -f2 | cut -d' ' -f3)
 URL="https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community_${VERSION}-1ubuntu${UBUNTU_RELEASE}_amd64.deb"
 FILE=$(basename $URL)
 
 cd /tmp
+echo "Fazendo o download do arquivo $URL ..."
 wget $URL -O $FILE
 if [ $? -ne 0 ]; then
     echo "Falha no download do arquivo $FILE"
