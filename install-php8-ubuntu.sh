@@ -8,6 +8,9 @@
 
 sudo add-apt-repository ppa:ondrej/php
 
+sudo apt-get update
+sudo apt-get -y dist-upgrade
+
 PHP=`apt-cache search php8.* | grep "metapackage" | \
 		sort | tail -1 | cut -d" " -f1`
 
