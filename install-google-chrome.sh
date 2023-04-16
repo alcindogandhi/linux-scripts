@@ -25,7 +25,7 @@ if [ $? -ne 0 ]; then
 	exit 2
 fi
 
-apt install ./$FILE
+apt -y install ./$FILE
 if [ $? -ne 0 ]; then
     echo "Falha ao instalar o arquivo $FILE"
     rm -f /tmp/$FILE
@@ -35,3 +35,4 @@ fi
 
 rm -f /tmp/$FILE
 cd $DIR
+
