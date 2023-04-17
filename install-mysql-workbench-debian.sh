@@ -34,13 +34,17 @@ fi
 
 DIR=$(pwd)
 ID=$(cat /etc/os-release | grep "^ID=" | cut -d'=' -f2)
-if [ $ID = "ubuntu" ]; then
-    UBUNTU_RELEASE=$(cat /etc/lsb-release  | grep RELEASE | cut -d'=' -f2)
+if [ $ID = "debian" ]; then
+    URL="https://downloads.mysql.com/archives/get/p/8/file/mysql-workbench-community_8.0.20-1ubuntu18.04_amd64.deb"
 else
-    UBUNTU_RELEASE=$(cat /etc/upstream-release/lsb-release  | grep RELEASE | cut -d'=' -f2)
+    if [ $ID = "ubuntu" ]; then
+        UBUNTU_RELEASE=$(cat /etc/lsb-release  | grep RELEASE | cut -d'=' -f2)
+    else
+        UBUNTU_RELEASE=$(cat /etc/upstream-release/lsb-release  | grep RELEASE | cut -d'=' -f2)
+    fi
+    VERSION=$(curl -s https://dev.mysql.com/downloads/workbench/ | grep "h1" | cut -d'>' -f2 | cut -d' ' -f3)
+    URL="https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community_${VERSION}-1ubuntu${UBUNTU_RELEASE}_amd64.deb"
 fi
-VERSION=$(curl -s https://dev.mysql.com/downloads/workbench/ | grep "h1" | cut -d'>' -f2 | cut -d' ' -f3)
-URL="https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community_${VERSION}-1ubuntu${UBUNTU_RELEASE}_amd64.deb"
 FILE=$(basename $URL)
 
 cd /tmp
