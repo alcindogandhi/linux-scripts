@@ -15,6 +15,11 @@ USUARIO=$(grep ":1000:" /etc/group | cut -d':' -f1)
 DIR=$(pwd)
 PATH=/usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin
 
+if [ -z $(grep "^en_US.UTF-8 UTF-8" /etc/locale.gen) ]; then
+    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+fi
+locale-gen
+
 cat <<EOF >/etc/apt/sources.list
 deb http://ftp.br.debian.org/debian/ bullseye main cotrib non-free
 deb http://security.debian.org/debian-security bullseye-security main contrib non-free
