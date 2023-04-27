@@ -39,7 +39,7 @@ if [ $? -ne 0 ]; then
 	exit 2
 fi
 
-JDK_HOME=$(tar -ztf /opt/java/jdk-8u361-linux-x64.tar.gz | head -1 | cut -d'/' -f1)
+JDK_HOME=$(tar -ztf /opt/java/jdk-$LATEST_VERSION-linux-x64.tar.gz | head -1 | cut -d'/' -f1)
 rm -fr $JDK_HOME
 tar -xzf $FILE
 if [ $? -ne 0 ]; then
