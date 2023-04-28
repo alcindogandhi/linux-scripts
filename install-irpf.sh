@@ -39,6 +39,7 @@ fi
 
 echo "Ok"
 echo "Instalando o programa"
+mkdir -p $RFB
 cd $RFB
 wget -q -O rfb.ico https://raw.githubusercontent.com/alcindogandhi/linux-scripts/main/img/rfb.ico
 rm -fr $FILE_DIR
