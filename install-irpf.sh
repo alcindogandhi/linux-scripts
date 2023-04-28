@@ -8,12 +8,22 @@
 # Data:  2022-05-26
 #
 
-DIR=$(pwd)
 YEAR=${1:-$(date +%Y)}
 URL=https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/download/pgd/dirpf
 URL=$(curl -s $URL | grep Multiplataforma | grep $YEAR | cut -d\" -f4)
 FILE=$(basename $URL)
 FILE_DIR="IRPF$YEAR"
+JAVA="/usr/lib/jvm/java-11-openjdk/bin/java"
+
+# Verifica se o Java 11 está instalado
+$JAVA -version 1>/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo >&2
+	echo >&2 "Erro! Java 11 não encontrado."
+    echo >&2 "Instale o JRE-OpenJDK 11 antes de continuar."
+	echo >&2
+	exit 1
+fi
 
 # Se o script estiver sendo executado com permissão de root, instala no sistema.
 # Senãoo, instala na pasta do usuário.
@@ -33,8 +43,7 @@ if [ $? -ne 0 ]; then
     echo >&2
 	echo >&2 "Erro! Falha no download do IRPF $YEAR"
 	echo >&2
-    cd $DIR
-	exit 1
+	exit 2
 fi
 
 echo "Ok"
@@ -56,7 +65,7 @@ Encoding=UTF-8
 Name=IRPF $YEAR
 StartupWMClass=serpro-ppgd-app-IRPFPGD
 Comment=Imposto de Renda $YEAR
-Exec=/usr/lib/jvm/java-11-openjdk/bin/java -jar $RFB/IRPF$YEAR/irpf.jar
+Exec=$JAVA -jar $RFB/IRPF$YEAR/irpf.jar
 Icon=$RFB/rfb.ico
 Categories=Application;Office
 Version=1.0
@@ -66,8 +75,6 @@ EOF
 
 cd $MENU
 ln -fs $RFB/IRPF$YEAR/irpf-$YEAR.desktop
-
-cd $DIR
 
 echo
 echo "IRPF $YEAR instalado com sucesso."
