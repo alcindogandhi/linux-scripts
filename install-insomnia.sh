@@ -39,10 +39,10 @@ wget -q -O insomnia.svg https://raw.githubusercontent.com/alcindogandhi/linux-sc
 cat <<EOF >insomnia-$VERSION.desktop
 [Desktop Entry]
 Name=Insomnia
-Exec=/opt/insomnia/insomnia %U
+Exec=/opt/insomnia-$VERSION/insomnia %U
 Terminal=false
 Type=Application
-Icon=/opt/insomnia/insomnia.svg
+Icon=/opt/insomnia-$VERSION/insomnia.svg
 StartupWMClass=Insomnia
 Comment=The Collaborative API Design Tool
 Categories=Development;
@@ -51,7 +51,7 @@ MimeType=x-scheme-handler/insomnia;
 EOF
 cd /usr/share/applications
 rm -f insomnia-*.desktop
-ln -s /opt/insomnia/insomnia-$VERSION.desktop
+ln -s /opt/insomnia-$VERSION/insomnia-$VERSION.desktop
 
 echo
 echo "Insomnia $VERSION instalado com sucesso."
