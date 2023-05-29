@@ -16,6 +16,7 @@ FILE=$(basename $URL)
 DIR=$(echo $FILE | cut -d'.' -f-4)
 
 cd /opt
+rm -f $FILE
 wget $URL
 if [ $? -ne 0 ]; then
 	echo >&2
