@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Instalação do Eclipse JEE
+# Instalação do NodeJS LTS
 #
 # Nome: Alcindo Gandhi
 # Data: 24/02/2023
