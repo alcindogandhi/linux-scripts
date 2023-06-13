@@ -28,7 +28,7 @@ $CODENAME stable" \
 
 sudo apt-get update
 sudo apt-get -y --no-install-recommends install \
-	docker-ce docker-ce-cli containerd.io
+	docker-ce docker-ce-cli containerd.io docker-*-plugin
 sudo usermod -aG docker $USER
 
 sudo docker run hello-world
