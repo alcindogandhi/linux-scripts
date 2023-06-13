@@ -51,7 +51,7 @@ if [ $? -ne 0 ]; then
     echo "Falha ao descompactar o arquivo $FILE"
     rm -f $FILE
     cd $DIR
-	exit 3
+	exit 4
 fi
 
 rm -f $FILE
