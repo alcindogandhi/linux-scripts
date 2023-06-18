@@ -17,7 +17,7 @@ DIR=$(echo $FILE | cut -d'.' -f-4)
 
 cd /opt
 rm -f $FILE
-wget $URL
+wget $URL -O $FILE
 if [ $? -ne 0 ]; then
 	echo >&2
 	echo >&2 "Erro! Falha no download do Insomnia $VERSION"
@@ -25,6 +25,7 @@ if [ $? -ne 0 ]; then
 	exit 2
 fi
 
+rm -fr insomnia-*
 tar -xzf $FILE
 if [ $? -ne 0 ]; then
 	echo >&2
@@ -32,8 +33,8 @@ if [ $? -ne 0 ]; then
 	echo >&2
 	exit 2
 fi
+rm -fr $FILE
 
-rm -fr insomnia-*
 mv $DIR insomnia-$VERSION
 cd insomnia-$VERSION
 wget -q -O insomnia.svg https://raw.githubusercontent.com/alcindogandhi/linux-scripts/main/img/insomnia.svg
