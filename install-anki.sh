@@ -9,8 +9,8 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
+SCRIPT=$(readlink -f "$0")
 VERSION=$(curl -s "https://github.com/ankitects/anki/releases/" | grep "<h2" | head -1 | cut -d'>' -f2 | cut -d'<' -f1)
-
 URL="https://github.com/ankitects/anki/releases/download/$VERSION/anki-$VERSION-linux-qt6.tar.zst"
 FILE=$(basename $URL)
 DIR=$(echo $FILE | cut -d'.' -f-3)
@@ -25,7 +25,6 @@ if [ $? -ne 0 ]; then
 	exit 2
 fi
 
-rm -fr insomnia-*
 tar --use-compress-program=unzstd -xf $FILE
 if [ $? -ne 0 ]; then
 	echo >&2
@@ -33,8 +32,7 @@ if [ $? -ne 0 ]; then
 	echo >&2
 	exit 2
 fi
-
-rm -fr $FILE
+rm -fr $FILE "anki-*"
 mv $DIR anki-$VERSION
 cd anki-$VERSION
 
@@ -56,22 +54,22 @@ X-GNOME-SingleWindow=true
 SingleMainWindow=true
 EOF
 rm -f /usr/share/applications/anki.desktop
-cp anki.desktop /usr/share/applications/
-cp anki.1 /usr/share/man/man1/
+cp $SCRIPT install.sh
 
 cat <<EOF >uninstall.sh
 #!/bin/sh
 
-if [ "$(id -u)" != "0" ]; then
+if [ \$(id -u) != "0" ]; then
    echo "Este script deve ser executado como root." 1>&2
    exit 1
 fi
 
 cd /
-xdg-mime uninstall /opt/anki-$VERSION/anki.xml || true
-rm -fr /usr/share/applications/anki-$version.desktop
-rm -fr /opt/anki-$version
+xdg-mime uninstall /opt/anki-$VERSION/anki.xml
+rm -fr /usr/local/bin/anki
+rm -fr /usr/share/applications/anki-$VERSION.desktop
 rm -fr /usr/share/man/man1/anki.1
+rm -fr /opt/anki-$VERSION
 
 echo "Anki $VERSION removido com sucesso"
 
@@ -81,6 +79,10 @@ xdg-mime install anki.xml --novendor
 xdg-mime default anki.desktop application/x-colpkg
 xdg-mime default anki.desktop application/x-apkg
 xdg-mime default anki.desktop application/x-ankiaddon
+
+cd /usr/local/bin && ln -fs /opt/anki-$VERSION/anki
+cd /usr/share/applications && ln -fs /opt/anki-$VERSION/anki.desktop
+cd /usr/share/man/man1 && ln -fs /opt/anki-$VERSION/anki.1
 
 echo
 echo "Anki $VERSION instalado com sucesso."
