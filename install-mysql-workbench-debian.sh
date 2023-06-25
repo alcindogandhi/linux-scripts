@@ -32,10 +32,16 @@ if [ -n "$REQUIREMENTS" ]; then
     fi
 fi
 
-DIR=$(pwd)
 ID=$(cat /etc/os-release | grep "^ID=" | cut -d'=' -f2)
 if [ $ID = "debian" ]; then
-    URL="https://downloads.mysql.com/archives/get/p/8/file/mysql-workbench-community_8.0.20-1ubuntu18.04_amd64.deb"
+    VERSION=$(grep "^VERSION_ID" /etc/os-release | cut -d'"' -f2)
+    if [ $VERSION -lt 12 ]; then
+        URL="https://downloads.mysql.com/archives/get/p/8/file/mysql-workbench-community_8.0.20-1ubuntu18.04_amd64.deb"
+    else
+        RELEASE="22.04"
+        VERSION=$(curl -s https://dev.mysql.com/downloads/workbench/ | grep "h1" | cut -d'>' -f2 | cut -d' ' -f3)
+        URL="https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community_${VERSION}-1ubuntu${UBUNTU_RELEASE}_amd64.deb"
+    fi
 else
     if [ $ID = "ubuntu" ]; then
         UBUNTU_RELEASE=$(cat /etc/lsb-release  | grep RELEASE | cut -d'=' -f2)
@@ -53,7 +59,6 @@ wget $URL -O $FILE
 if [ $? -ne 0 ]; then
     echo "Falha no download do arquivo $FILE"
     rm -f $FILE
-    cd $DIR
 	exit 3
 fi
 
@@ -61,12 +66,10 @@ apt-get -y install ./$FILE
 if [ $? -ne 0 ]; then
     echo "Falha ao instalar o arquivo $FILE"
     rm -f $FILE
-    cd $DIR
 	exit 4
 fi
 
 rm -f $FILE
-cd $DIR
 echo
 echo "Instalação do MySQL Workbench $VERSION concluída com sucesso."
 echo
