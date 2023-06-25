@@ -40,7 +40,7 @@ if [ $ID = "debian" ]; then
     else
         RELEASE="22.04"
         VERSION=$(curl -s https://dev.mysql.com/downloads/workbench/ | grep "h1" | cut -d'>' -f2 | cut -d' ' -f3)
-        URL="https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community_${VERSION}-1ubuntu${UBUNTU_RELEASE}_amd64.deb"
+        URL="https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community_${VERSION}-1ubuntu${RELEASE}_amd64.deb"
     fi
 else
     if [ $ID = "ubuntu" ]; then
