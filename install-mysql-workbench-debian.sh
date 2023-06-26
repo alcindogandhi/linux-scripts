@@ -41,7 +41,7 @@ install_debian_12() {
     wget "http://mirrors.kernel.org/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu11_amd64.deb"
     wget "http://mirrors.kernel.org/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_2.1.5-2ubuntu1_amd64.deb"
     wget "http://mirrors.kernel.org/ubuntu/pool/main/g/glibmm2.4/libglibmm-2.4-1v5_2.66.6-1_amd64.deb"
-    apt-get -f install "./*.deb"
+    apt-get install ./*.deb
     cd ~
     rm -fr /tmp/install-mysql-workbench
     echo
