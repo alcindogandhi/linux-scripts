@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Instalação do MySQL Workbench no Ubuntu
 #
@@ -32,21 +32,27 @@ if [ -n "$REQUIREMENTS" ]; then
     fi
 fi
 
-install_debian_12() {
+function install_debian_12() {
     rm -fr /tmp/install-mysql-workbench
-    mkdir /tmp/install-mysql-workbench
+    mkdir -p /tmp/install-mysql-workbench
     cd /tmp/install-mysql-workbench
-    wget "https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community_8.0.33-1ubuntu23.04_amd64.deb"
-    wget "http://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/libmysqlclient21_8.0.33-0ubuntu0.23.04.2_amd64.deb"
-    wget "http://mirrors.kernel.org/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu11_amd64.deb"
-    wget "http://mirrors.kernel.org/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_2.1.5-2ubuntu1_amd64.deb"
-    wget "http://mirrors.kernel.org/ubuntu/pool/main/g/glibmm2.4/libglibmm-2.4-1v5_2.66.6-1_amd64.deb"
-    apt-get install ./*.deb
-    cd ~
-    rm -fr /tmp/install-mysql-workbench
-    echo
-    echo "Instalação do MySQL Workbench $VERSION concluída com sucesso."
-    echo
+    URLS=("https://packages.ubuntu.com/lunar/amd64/libmysqlclient21/download" \
+        "https://packages.ubuntu.com/lunar/amd64/libjpeg8/download" \
+        "https://packages.ubuntu.com/lunar/amd64/libjpeg-turbo8/download" \
+        "https://packages.ubuntu.com/lunar/amd64/libglibmm-2.4-1v5/download" \
+    )
+    for url in ${URLS[@]}
+    do
+        url=$(curl -s $url | grep ".deb" | grep "http" | head -1 | cut -d'"' -f2)
+        echo "Fazendo o download do arquivo $url ..."
+        wget $url
+        if [ $? -ne 0 ]; then
+            FILE=$(basename $url)
+            echo "Falha no download do arquivo $FILE"
+            cd /tmp && rm -fr /tmp/install-mysql-workbench
+            exit 3
+        fi
+    done
 }
 
 
@@ -57,7 +63,13 @@ if [ $ID = "debian" ]; then
         URL="https://downloads.mysql.com/archives/get/p/8/file/mysql-workbench-community_8.0.20-1ubuntu18.04_amd64.deb"
     else
         install_debian_12
-        exit 0
+        result=$?
+        if [ $result -ne 0 ]; then
+            exit result
+        fi
+        RELEASE="23.04"
+        VERSION=$(curl -s https://dev.mysql.com/downloads/workbench/ | grep "h1" | cut -d'>' -f2 | cut -d' ' -f3)
+        URL="https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community_${VERSION}-1ubuntu${RELEASE}_amd64.deb"
     fi
 else
     if [ $ID = "ubuntu" ]; then
@@ -70,23 +82,24 @@ else
 fi
 FILE=$(basename $URL)
 
-cd /tmp
+mkdir -p /tmp/install-mysql-workbench
+cd /tmp/install-mysql-workbench
 echo "Fazendo o download do arquivo $URL ..."
 wget $URL -O $FILE
 if [ $? -ne 0 ]; then
-    echo "Falha no download do arquivo $FILE"
-    rm -f $FILE
+    echo "Erro! Falha no download do arquivo $FILE"
+    cd /tmp && rm -fr /tmp/install-mysql-workbench
 	exit 3
 fi
 
-apt-get -y install ./$FILE
+apt-get -y install ./*.deb
 if [ $? -ne 0 ]; then
-    echo "Falha ao instalar o arquivo $FILE"
-    rm -f $FILE
+    echo "Erro! Falha ao instalar os pacotes DEB."
+    cd /tmp && rm -fr /tmp/install-mysql-workbench
 	exit 4
 fi
 
-rm -f $FILE
+cd /tmp && rm -fr /tmp/install-mysql-workbench
 echo
 echo "Instalação do MySQL Workbench $VERSION concluída com sucesso."
 echo
