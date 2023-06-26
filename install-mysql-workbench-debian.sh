@@ -56,7 +56,7 @@ if [ $ID = "debian" ]; then
     if [ $VERSION -lt 12 ]; then
         URL="https://downloads.mysql.com/archives/get/p/8/file/mysql-workbench-community_8.0.20-1ubuntu18.04_amd64.deb"
     else
-        install_debian_12()
+        install_debian_12
         exit 0
     fi
 else
