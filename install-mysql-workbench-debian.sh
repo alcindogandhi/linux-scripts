@@ -36,7 +36,7 @@ install_debian_12() {
     rm -fr /tmp/install-mysql-workbench
     mkdir /tmp/install-mysql-workbench
     cd /tmp/install-mysql-workbench
-    wget "https://downloads.mysql.com/archives/get/p/8/file/mysql-workbench-community_8.0.20-1ubuntu18.04_amd64.deb"
+    wget "https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community_8.0.33-1ubuntu23.04_amd64.deb"
     wget "http://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/libmysqlclient21_8.0.33-0ubuntu0.23.04.2_amd64.deb"
     wget "http://mirrors.kernel.org/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu11_amd64.deb"
     wget "http://mirrors.kernel.org/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_2.1.5-2ubuntu1_amd64.deb"
@@ -54,12 +54,10 @@ ID=$(cat /etc/os-release | grep "^ID=" | cut -d'=' -f2)
 if [ $ID = "debian" ]; then
     VERSION=$(grep "^VERSION_ID" /etc/os-release | cut -d'"' -f2)
     if [ $VERSION -lt 12 ]; then
+        URL="https://downloads.mysql.com/archives/get/p/8/file/mysql-workbench-community_8.0.20-1ubuntu18.04_amd64.deb"
+    else
         install_debian_12()
         exit 0
-    else
-        RELEASE="22.04"
-        VERSION=$(curl -s https://dev.mysql.com/downloads/workbench/ | grep "h1" | cut -d'>' -f2 | cut -d' ' -f3)
-        URL="https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community_${VERSION}-1ubuntu${RELEASE}_amd64.deb"
     fi
 else
     if [ $ID = "ubuntu" ]; then
