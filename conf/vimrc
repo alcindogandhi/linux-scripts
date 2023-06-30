@@ -1,0 +1,23 @@
+" ---------------------------------------------------------
+" Arquivo de configuracao do Vim
+"
+" Autor: Alcindo Gandhi Barreto Almeida
+" Data: 14/12/2018
+"
+"----------------------------------------------------------
+
+" Mostra a numeracao das linhas
+set nu
+
+" Tamanho da tabulacao
+set ts=4
+
+" Habilita auto-indentacao
+set ai
+
+" Habilita cores
+syntax on
+
+" Habilita o modo de colagem usando F3
+set pastetoggle=<F3>
+
