@@ -17,7 +17,8 @@ DIR=$(echo $FILE | cut -d'.' -f-4)
 
 cd /opt
 rm -f $FILE
-wget $URL -O $FILE
+printf "Efetuando o download do Insomnia nos servidores do Github ... "
+wget -q $URL -O $FILE
 if [ $? -ne 0 ]; then
 	echo >&2
 	echo >&2 "Erro! Falha no download do Insomnia $VERSION"
@@ -25,6 +26,8 @@ if [ $? -ne 0 ]; then
 	exit 2
 fi
 
+echo "Ok"
+printf "Instalando o programa ... "
 rm -fr insomnia-*
 tar -xzf $FILE
 if [ $? -ne 0 ]; then
@@ -55,6 +58,7 @@ cd /usr/share/applications
 rm -f insomnia-*.desktop
 ln -s /opt/insomnia-$VERSION/insomnia-$VERSION.desktop
 
+echo "Ok"
 echo
 echo "Insomnia $VERSION instalado com sucesso."
 echo
