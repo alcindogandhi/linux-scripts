@@ -12,13 +12,6 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-# Verifica se o script está sendo executado pelo Bash
-#if [ -z $BASH ]
-#then
-#   echo "Este script deve ser executado pelo Bash."
-#   exit 2
-#fi
-
 # Instalando os requisitos do script
 REQUIREMENTS=""
 wget --version >/dev/null 2>&1
@@ -35,7 +28,7 @@ if [ -n "$REQUIREMENTS" ]; then
     apt-get -y install $REQUIREMENTS
     if [ $? -ne 0 ]; then
         echo "Falha na instalação dos requisitos para execução do script."
-        exit 3
+        exit 2
     fi
 fi
 
@@ -57,7 +50,7 @@ install_debian_12() {
             FILE=$(basename $url)
             echo "Falha no download do arquivo $FILE"
             cd /tmp && rm -fr /tmp/install-mysql-workbench
-            exit 4
+            exit 3
         fi
     done
 }
@@ -96,14 +89,14 @@ wget $URL -O $FILE
 if [ $? -ne 0 ]; then
     echo "Erro! Falha no download do arquivo $FILE"
     cd /tmp && rm -fr /tmp/install-mysql-workbench
-	exit 3
+	exit 4
 fi
 
 apt-get -y install ./*.deb
 if [ $? -ne 0 ]; then
     echo "Erro! Falha ao instalar os pacotes DEB."
     cd /tmp && rm -fr /tmp/install-mysql-workbench
-	exit 4
+	exit 5
 fi
 
 cd /tmp && rm -fr /tmp/install-mysql-workbench
