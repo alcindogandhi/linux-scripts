@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Instalação do MySQL Workbench no Ubuntu
 #
@@ -13,11 +13,11 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Verifica se o script está sendo executado pelo Bash
-if [ -z $BASH ]
-then
-   echo "Este script deve ser executado pelo Bash."
-   exit 2
-fi
+#if [ -z $BASH ]
+#then
+#   echo "Este script deve ser executado pelo Bash."
+#   exit 2
+#fi
 
 # Instalando os requisitos do script
 REQUIREMENTS=""
@@ -39,16 +39,16 @@ if [ -n "$REQUIREMENTS" ]; then
     fi
 fi
 
-function install_debian_12() {
+install_debian_12() {
     rm -fr /tmp/install-mysql-workbench
     mkdir -p /tmp/install-mysql-workbench
     cd /tmp/install-mysql-workbench
-    URLS=("https://packages.ubuntu.com/lunar/amd64/libmysqlclient21/download" \
-        "https://packages.ubuntu.com/lunar/amd64/libjpeg8/download" \
-        "https://packages.ubuntu.com/lunar/amd64/libjpeg-turbo8/download" \
-        "https://packages.ubuntu.com/lunar/amd64/libglibmm-2.4-1v5/download" \
-    )
-    for url in ${URLS[@]}
+    URLS="https://packages.ubuntu.com/lunar/amd64/libmysqlclient21/download"
+	URLS="$URLS https://packages.ubuntu.com/lunar/amd64/libjpeg8/download"
+    URLS="$URLS https://packages.ubuntu.com/lunar/amd64/libjpeg-turbo8/download"
+    URLS="$URLS https://packages.ubuntu.com/lunar/amd64/libglibmm-2.4-1v5/download"
+
+    for url in ${URLS};
     do
         url=$(curl -s $url | grep ".deb" | grep "http" | head -1 | cut -d'"' -f2)
         echo "Fazendo o download do arquivo $url ..."
