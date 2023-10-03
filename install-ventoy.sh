@@ -6,8 +6,7 @@
 # Data: 25/03/2023
 #
 
-DIR=$(pwd)
-VERSION=$(curl -s https://github.com/ventoy/Ventoy/releases | grep sr-only | head -3 | grep h2 | cut -d'>' -f2 | cut -d' ' -f2)
+VERSION=$(curl -s https://github.com/ventoy/Ventoy/releases | grep "sr-only" | grep "release" | head -1 | grep h2 | cut -d'>' -f2 | cut -d' ' -f2)
 URL=https://github.com/ventoy/Ventoy/releases/download/v$VERSION/ventoy-${VERSION}-linux.tar.gz
 FILE=$(basename $URL)
 FILE_DIR=$(echo "$FILE" | cut -d'-' -f1-2)
@@ -25,35 +24,34 @@ wget -q $URL
 if [ $? -ne 0 ]; then
     echo >&2
 	echo >&2 "Erro! Falha no download do Ventoy $VERSION"
+	echo >&2 "URL: $URL"
 	echo >&2
-    cd $DIR
 	exit 2
 fi
 
 echo "Ok"
 printf "Instalando o programa ... "
 cd /opt
-rm -fr $FILE_DIR
+rm -fr ventoy*
 tar -xzf /tmp/$FILE
 if [ $? -ne 0 ]; then
     echo >&2
 	echo >&2 "Erro! Falha ao descompactar o arquivo do Ventoy $VERSION"
 	echo >&2
-    cd $DIR
+	rm -fr $FILE_DIR
 	exit 2
 fi
-rm -f ventoy /tmp/$FILE
+rm -f /tmp/$FILE
 
-ln -s $FILE_DIR ventoy
 cd $FILE_DIR
 wget -q -O ventoy.png https://raw.githubusercontent.com/alcindogandhi/linux-scripts/main/img/ventoy.png
 cat <<EOF >ventoy.desktop
 [Desktop Entry]
 Encoding=UTF-8
 Name=Ventoy
-Comment=Ventou $VERSION
-Exec=/opt/ventoy/VentoyGUI.x86_64
-Icon=/opt/ventoy/ventoy.png
+Comment=Ventoy $VERSION
+Exec=$FILE_DIR/VentoyGUI.x86_64
+Icon=$FILE_DIR/ventoy.png
 Categories=Application;System
 Version=1.0
 Type=Application
@@ -62,11 +60,10 @@ EOF
 
 cd /usr/share/applications
 rm -f ventoy.desktop
-ln -s /opt/ventoy/ventoy.desktop
-
-cd $DIR
+ln -s $FILE_DIR/ventoy.desktop
 
 echo "Ok"
 echo
 echo "Ventoy $VERSION instalado com sucesso."
 echo
+
