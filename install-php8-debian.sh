@@ -25,8 +25,7 @@ fi
 apt-get update
 apt-get -y dist-upgrade
 
-PHP=`apt-cache search php8.* | grep "metapackage" | \
-		sort | tail -1 | cut -d" " -f1`
+PHP=`apt-cache search php8.* | grep "metapackage" | sort | tail -2 | head -1 | cut -d" " -f1`
 
 apt-get --no-install-recommends -y install \
 	$PHP $PHP-xml $PHP-mbstring $PHP-curl
