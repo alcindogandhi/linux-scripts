@@ -44,6 +44,15 @@ fi
 
 apt-get -y autoremove
 
+flatpak --version >/dev/null
+if [ $? -eq 0 ]; then
+	flatpak -y update
+	if [ $? -ne 0 ]; then
+		echo "Falha na atualização dos pacotes do Flatpak."
+		exit 5
+	fi
+fi
+
 echo
 echo "Atualizacao efetuada com sucesso."
 echo
