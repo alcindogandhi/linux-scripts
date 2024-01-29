@@ -32,9 +32,9 @@ if [ -n "$REQUIREMENTS" ]; then
     fi
 fi
 
-VERSION=$(curl -s https://github.com/arduino/arduino-cli/releases/ | grep "sr-only" | grep "h2" | head -1 | cut -d'>' -f2 | cut -d'<' -f1)
+VERSION=$(curl -s https://github.com/arduino/arduino-cli/releases/ | grep "sr-only" | grep "h2" | head -1 | cut -d'>' -f2 | cut -d'<' -f1 | cut -d'v' -f2)
 FILE="arduino-cli_${VERSION}_Linux_64bit.tar.gz"
-URL="https://github.com/arduino/arduino-cli/releases/download/$VERSION/$FILE"
+URL="https://github.com/arduino/arduino-cli/releases/download/v$VERSION/$FILE"
 
 # Baixando o Arduino CLI do repositório
 echo "### Efetuando o download do Arduino CLI $VERSION ###"
