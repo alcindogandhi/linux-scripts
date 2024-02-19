@@ -1,9 +1,9 @@
 #!/bin/sh
 #
-# Instalação do Arduino CLI
+# Instalação do Arduino v1.8
 #
 # Nome: Alcindo Gandhi
-# Data: 11/05/2023
+# Data: 18/02/2024
 #
 
 # Verifica se o script possui os privilégios necessários
@@ -25,12 +25,12 @@ if [ $? -ne 0 ]; then
     exit 3
 fi
 
-VERSION=$(curl -s https://github.com/arduino/arduino-cli/releases/ | grep "sr-only" | grep "h2" | head -1 | cut -d'>' -f2 | cut -d'<' -f1 | cut -d'v' -f2)
-FILE="arduino-cli_${VERSION}_Linux_64bit.tar.gz"
-URL="https://github.com/arduino/arduino-cli/releases/download/v$VERSION/$FILE"
+VERSION=$(curl -s https://github.com/arduino/Arduino/releases | grep "/arduino/Arduino/tree/" | head -1 | cut -d'"' -f2 | cut -d'/' -f5)
+FILE="arduino-${VERSION}-linux64.tar.xz"
+URL="https://downloads.arduino.cc/${FILE}"
 
-# Baixando o Arduino CLI do repositório
-echo "### Efetuando o download do Arduino CLI $VERSION ###"
+# Baixando o Arduino do repositório
+echo "### Efetuando o download do Arduino $VERSION ###"
 cd /tmp
 ls $FILE >/dev/null 2>&1
 if [ $? -ne 0 ]; then
@@ -43,14 +43,17 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "### Descompactando o arquivo baixando ###"
-tar -xzf $FILE
+cd /opt
+tar -xJf /tmp/$FILE
 if [ $? -ne 0 ]; then
     echo "Falha ao descompactar o arquivo $FILE"
-    rm -f $FILE
+    rm -f /tmp/$FILE
 	exit 5
 fi
-rm -fr $FILE /usr/local/bin/arduino-cli
-mv arduino-cli /usr/local/bin
+rm -fr arduino /tmp/$FILE
+ln -s "arduino-${VERSION}" arduino
+cd arduino
+sh install.sh
 
 echo
 echo "### Instalação do Arduino CLI $VERSION efetuada com sucesso. ###"
