@@ -12,6 +12,12 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
+# Instalando os requisitos do script em sistemas Debian
+apt-get --version > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    apt-get -y install wget curl python3-serial
+fi
+
 # Verificando os requisitos do script
 wget --version >/dev/null 2>&1
 if [ $? -ne 0 ]; then
@@ -30,6 +36,7 @@ FILE="arduino-${VERSION}-linux64.tar.xz"
 URL="https://downloads.arduino.cc/${FILE}"
 
 # Baixando o Arduino do repositório
+echo
 echo "### Efetuando o download do Arduino $VERSION ###"
 cd /tmp
 ls $FILE >/dev/null 2>&1
@@ -42,6 +49,7 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
+echo
 echo "### Descompactando o arquivo baixando ###"
 cd /opt
 tar -xJf /tmp/$FILE
@@ -50,11 +58,11 @@ if [ $? -ne 0 ]; then
     rm -f /tmp/$FILE
 	exit 5
 fi
-rm -fr arduino /tmp/$FILE
+rm -fr arduino /tmp/$FILE /usr/local/bin/arduino
 ln -s "arduino-${VERSION}" arduino
 cd arduino
 sh install.sh
 
 echo
-echo "### Instalação do Arduino CLI $VERSION efetuada com sucesso. ###"
+echo "### Instalação do Arduino $VERSION efetuada com sucesso. ###"
 echo
