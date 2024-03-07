@@ -7,6 +7,7 @@
 #
 
 FILE="/usr/local/sbin/upgrade"
+USER_ID_STR='$(id -u)'
 
 if [ "$(id -u)" != "0" ]; then
    echo "Este script deve ser executado como root." 1>&2
@@ -19,38 +20,38 @@ cat <<EOF >$FILE
 # Script de atualização do sistema
 #
 
-if [ "$(id -u)" != "0" ]; then
+if [ "$USER_ID_STR" != "0" ]; then
    echo "Este script deve ser executado como root." 1>&2
    exit 1
 fi
 
 apt-get update
-if [ $? -ne 0 ]; then
+if [ \$? -ne 0 ]; then
     echo "Falha na atualização do repositório."
-	exit 2
+        exit 2
 fi
 
 apt-get -dy dist-upgrade
-if [ $? -ne 0 ]; then
+if [ \$? -ne 0 ]; then
     echo "Falha no download dos pacotes."
-	exit 3
+        exit 3
 fi
 
 apt-get -y dist-upgrade
-if [ $? -ne 0 ]; then
+if [ \$? -ne 0 ]; then
     echo "Falha na atualização dos pacotes."
-	exit 4
+        exit 4
 fi
 
 apt-get -y autoremove
 
-flatpak --version >/dev/null
-if [ $? -eq 0 ]; then
-	flatpak -y update
-	if [ $? -ne 0 ]; then
-		echo "Falha na atualização dos pacotes do Flatpak."
-		exit 5
-	fi
+flatpak --version >/dev/null 2>&1
+if [ \$? -eq 0 ]; then
+        flatpak -y update
+        if [ \$? -ne 0 ]; then
+                echo "Falha na atualização dos pacotes do Flatpak."
+                exit 5
+        fi
 fi
 
 echo
