@@ -43,6 +43,13 @@ if [ \$? -ne 0 ]; then
         exit 4
 fi
 
+if [ "$DISTRO" = "ubuntu" ]; then
+    EXTRA_PACKAGES=$(sudo apt-get upgrade | grep -A 1 "The following packages have been kept back:" | tail -1 | cut -d' ' -f3-)
+	if [ -n "${EXTRA_PACKAGES}" ]; then
+        apt-get -y install $EXTRA_PACKAGES
+    fi
+fi
+
 apt-get -y autoremove
 
 flatpak --version >/dev/null 2>&1
