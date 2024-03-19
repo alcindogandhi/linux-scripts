@@ -13,14 +13,16 @@ URL=https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/download/pgd/di
 URL=$(curl -s $URL | grep Multiplataforma | grep $YEAR | cut -d\" -f4)
 FILE=$(basename $URL)
 FILE_DIR="IRPF$YEAR"
-JAVA="/usr/lib/jvm/java-11-openjdk/bin/java"
+JAVA="java"
+JAVA_MIN_VERSION=11
 
-# Verifica se o Java 11 está instalado
-$JAVA -version 1>/dev/null 2>&1
-if [ $? -ne 0 ]; then
+# Verifica se o Java está instalado
+JAVA_VERSION=$(java -version 2>&1 | grep "version" | cut -d' ' -f3 | cut -d'"' -f2 | cut -d'.' -f1)
+JAVA_VERSION=${JAVA_VERSION:=0}
+if [ $JAVA_VERSION -lt $JAVA_MIN_VERSION ]; then
     echo >&2
-	echo >&2 "Erro! Java 11 não encontrado."
-    echo >&2 "Instale o JRE-OpenJDK 11 antes de continuar."
+	echo >&2 "Erro! Java $JAVA_MIN_VERSION não encontrado."
+    echo >&2 "Instale o JRE-OpenJDK $JAVA_MIN_VERSION ou superior antes de continuar."
 	echo >&2
 	exit 1
 fi
@@ -37,6 +39,7 @@ fi
 
 cd /tmp
 rm -f $FILE
+echo "----- Instalação do IRPF $YEAR - Java $JAVA_VERSION -----"
 printf "Efetuando o download do arquivo nos servidores da Receita Federal ... "
 wget -q $URL
 if [ $? -ne 0 ]; then
