@@ -21,3 +21,6 @@ syntax on
 " Habilita o modo de colagem usando F3
 set pastetoggle=<F3>
 
+" Define o esquema de cor
+colorscheme slate
+
