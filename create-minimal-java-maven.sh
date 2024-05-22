@@ -15,7 +15,7 @@ helpFunction()
 	echo "	-a: Id do artefato do projeto. Ex.: $ARTIFACT_ID"
 	echo "	-n: Nome do projeto. Ex.: $PRJ_NAME"
 	echo "	-p: Pacote do projeto. Ex,: $PACKAGE"
-	echo "	-d: Descrição do projeto. Ex.: $DESCRIPTTION"
+	echo "	-d: Descrição do projeto. Ex.: $DESCRIPTION"
 	echo "	-v: Versão do projeto. Ex.: $VERSION"
 	echo "	-e: Codificação dos arquivos do projeto. Ex.: $SOURCE_ENCODING"
 	echo "	-j: Versão do Java do projeto. Ex.: $JAVA_VERSION"
@@ -26,19 +26,19 @@ helpFunction()
 while getopts "hg:a:n:p:d:v:e:j:m:" opt
 do
 	case "$opt" in
-		h ) helpFunction 
+		h ) helpFunction
 			exit 0 ;;
 		g ) GROUP_ID="$OPTARG" ;;
 		a ) ARTIFACT_ID="$OPTARG" ;;
 		n ) PRJ_NAME="$OPTARG" ;;
 		p ) PACKAGE="$OPTARG" ;;
-		d ) DESCRIPTTION="$OPTARG" ;;
+		d ) DESCRIPTION="$OPTARG" ;;
 		v ) VERSION="$OPTARG" ;;
 		e ) SOURCE_ENCODING="$OPTARG" ;;
 		j ) JAVA_VERSION="$OPTARG" ;;
 		m ) MAIN_APP="$OPTARG" ;;
-		? ) helpFunction 
-			exit 1 ;;		
+		? ) helpFunction
+			exit 1 ;;
    esac
 done
 
@@ -54,8 +54,8 @@ fi
 if [ -z "$PACKAGE" ]; then
 	PACKAGE="$GROUP_ID.$ARTIFACT_ID"
 fi
-if [ -z "$DESCRIPTTION" ]; then
-	DESCRIPTTION="Minimal Project"
+if [ -z "$DESCRIPTION" ]; then
+	DESCRIPTION="Minimal Project"
 fi
 if [ -z "$VERSION" ]; then
 	VERSION="0.0.1-SNAPSHOT"
@@ -82,7 +82,7 @@ echo "PRJ_NAME:        $PRJ_NAME"
 echo "PACKAGE:         $PACKAGE"
 echo "PACKAGE_DIR:     $PACKAGE_DIR"
 echo "RESOURCE_DIR:    $RESOURCE_DIR"
-echo "DESCRIPTTION:    $DESCRIPTTION"
+echo "DESCRIPTION:    $DESCRIPTION"
 echo "VERSION:         $VERSION"
 echo "SOURCE_ENCODING: $SOURCE_ENCODING"
 echo "JAVA_VERSION:    $JAVA_VERSION"
@@ -108,7 +108,7 @@ cat <<EOF >"pom.xml"
 	<artifactId>$ARTIFACT_ID</artifactId>
 	<version>$VERSION</version>
 	<name>$PRJ_NAME</name>
-	<description>$DESCRIPTTION</description>
+	<description>$DESCRIPTION</description>
 	<properties>
 		<project.build.sourceEncoding>$SOURCE_ENCODING</project.build.sourceEncoding>
 		<java.version>$JAVA_VERSION</java.version>
@@ -151,8 +151,6 @@ cat <<EOF >"pom.xml"
 </project>
 EOF
 
-echo "application.name=$PRJ_NAME" > 
-
 cat <<EOF >"$RESOURCE_DIR/application.yaml"
 app:
     name: $PRJ_NAME
@@ -164,11 +162,39 @@ package $PACKAGE;
 public class $MAIN_APP {
 
 	public static void main(String[] args) {
-		System.out.println("$DESCRIPTTION");
+		System.out.println("$DESCRIPTION");
 	}
 
 }
 EOF
+
+cat <<EOF >"build"
+#!/bin/sh
+
+SCRIPT=\$(readlink -f "\$0")
+DIR=$(dirname "\$SCRIPT")
+
+cd \$DIR
+
+rm -fr target
+mvn clean package
+EOF
+chmod +x build
+
+cat <<EOF >"run"
+#!/bin/sh
+
+SCRIPT=\$(readlink -f "\$0")
+DIR=\$(dirname "\$SCRIPT")
+NAME=\$(cat pom.xml | grep artifactId | head -1 | cut -d'>' -f2 | cut -d'<' -f1)
+VERSION=\$(cat pom.xml | grep version | head -2 | tail -1 | cut -d'>' -f2 | cut -d'<' -f1)
+JAR=\$(ls "\$DIR"/target/\$NAME-\$VERSION.jar)
+
+cd \$DIR
+
+java -jar \$JAR $1
+EOF
+chmod +x run
 
 echo
 echo "Projeto $PRJ_NAME criado com sucesso"
