@@ -19,10 +19,10 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 apt-get -y remove docker docker-engine docker.io containerd runc
-if [ $? -ne 0 ]; then
-    echo "Erro! Falha na remoção dos componentes antigos do Docker do sistema." >&2
-	exit 2
-fi
+#if [ $? -ne 0 ]; then
+#    echo "Erro! Falha na remoção dos componentes antigos do Docker do sistema." >&2
+#	exit 2
+#fi
 
 apt-get -y --no-install-recommends install \
 	ca-certificates curl gnupg lsb-release
