@@ -1,9 +1,9 @@
 #!/bin/sh
 #
-# Script para download da última versão do Ventoy
+# Script para download da última versão do GDrive
 #
 # Autor: Alcindo Gandhi
-# Data: 25/03/2023
+# Data: 27/05/2024
 #
 
 GIT_URL="https://github.com/glotlabs/gdrive/releases"
