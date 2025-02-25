@@ -9,15 +9,21 @@ if [ "$(id -u)" != "0" ]; then
    exit 1
 fi
 
-VERSION=$(curl -s https://github.com/Kong/insomnia/releases/ | grep "<h2" | grep Insomnia | head -1 | cut -d'>' -f2 | cut -d' ' -f2)
+VERSION=$(curl -s https://github.com/Kong/insomnia/releases/ | grep latest | grep download | cut -d'"' -f2 | cut -d'/' -f7 | cut -d'-' -f5 | cut -d'.' -f-3)
+if [ -z "$VERSION" ]; then
+	echo >&2
+	echo >&2 "Erro! Falha na obtenção da ultima versão estável do Insomnia."
+	echo >&2
+	exit 2
+fi
 
-URL="https://github.com/Kong/insomnia/releases/download/core%40$VERSION/Insomnia.Core-$VERSION.tar.gz"
+URL="https://github.com/Kong/insomnia/releases/download/core%40$VERSION/Insomnia.Core-$VERSION-x64.tar.gz"
 FILE=$(basename $URL)
 DIR=$(echo $FILE | cut -d'.' -f-4)
 
 cd /opt
 rm -f $FILE
-printf "Efetuando o download do Insomnia nos servidores do Github ... "
+printf "Efetuando o download do Insomnia $VERSION nos servidores do Github ... "
 wget -q $URL -O $FILE
 if [ $? -ne 0 ]; then
 	echo >&2
