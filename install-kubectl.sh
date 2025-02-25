@@ -75,4 +75,3 @@ echo "Ok"
 echo
 echo "Kubectl $VERSION instalado com sucesso."
 echo
-
