@@ -27,8 +27,18 @@ if [ $? -ne 0 ]; then
     exit 3
 fi
 
-URL=$(curl -s https://github.com/graalvm/graalvm-ce-builds/releases | grep "linux-x64_bin.tar.gz" | head -1 | cut -d'"' -f4)
-echo "URL: $URL"
+VERSION=$1
+if [ -z "$VERSION" ]; then
+    URL=$(curl -s https://github.com/graalvm/graalvm-ce-builds/releases | grep "linux-x64_bin.tar.gz" | head -1 | cut -d'"' -f4)
+else
+    URL=$(curl -s https://github.com/graalvm/graalvm-ce-builds/releases | grep "linux-x64_bin.tar.gz" | grep "$VERSION" | head -1 | cut -d'"' -f4)
+fi
+
+if [ -z "$URL" ]; then
+    echo "Erro! URL gerada para download do GraalVM inválida."
+    exit 4
+fi
+
 VERSION=$(echo $URL | cut -d'/' -f8 | cut -d'-' -f2)
 MAJOR_VERSION=$(echo $VERSION | cut -d'.' -f1)
 FILE=$(basename $URL)
@@ -38,7 +48,7 @@ wget $URL -O $FILE
 if [ $? -ne 0 ]; then
     echo "Falha no download do arquivo $FILE"
     rm -f $FILE
-	exit 4
+	exit 5
 fi
 
 rm -fr "graalvm-community-openjdk-$VERSION"*
@@ -46,7 +56,7 @@ tar -xzf $FILE
 if [ $? -ne 0 ]; then
     echo "Falha ao descompactar o arquivo $FILE"
     rm -f $FILE
-	exit 5
+	exit 6
 fi
 rm -f $FILE
 DIR=$(ls -d "graalvm-community-openjdk-$VERSION"* | head -1)
