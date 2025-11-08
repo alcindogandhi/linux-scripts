@@ -28,19 +28,19 @@ fi
 apt-get update
 if [ \$? -ne 0 ]; then
     echo "Falha na atualização do repositório."
-        exit 2
+    exit 2
 fi
 
 apt-get -dy dist-upgrade
 if [ \$? -ne 0 ]; then
     echo "Falha no download dos pacotes."
-        exit 3
+    exit 3
 fi
 
 apt-get -y dist-upgrade
 if [ \$? -ne 0 ]; then
     echo "Falha na atualização dos pacotes."
-        exit 4
+    exit 4
 fi
 
 if [ "$DISTRO" = "ubuntu" ]; then
@@ -54,11 +54,11 @@ apt-get -y autoremove
 
 flatpak --version >/dev/null 2>&1
 if [ \$? -eq 0 ]; then
-        flatpak -y update
-        if [ \$? -ne 0 ]; then
-                echo "Falha na atualização dos pacotes do Flatpak."
-                exit 5
-        fi
+    flatpak -y update
+    if [ \$? -ne 0 ]; then
+        echo "Falha na atualização dos pacotes do Flatpak."
+        exit 5
+    fi
 fi
 
 echo
