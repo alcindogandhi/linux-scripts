@@ -29,7 +29,8 @@ fi
 
 VERSION=$(echo $URL | cut -d'/' -f5)
 VB_PACKAGE=$(echo $URL | cut -d'/' -f6)
-EP_PACKAGE="Oracle_VM_VirtualBox_Extension_Pack-$VERSION.vbox-extpack"
+#EP_PACKAGE="Oracle_VM_VirtualBox_Extension_Pack-$VERSION.vbox-extpack"
+EP_PACKAGE="Oracle_VirtualBox_Extension_Pack-$VERSION.vbox-extpack"
 
 printf "Efetuando o download do Oracle Virtualbox $VERSION ... "
 wget -qO $VB_PACKAGE $URL

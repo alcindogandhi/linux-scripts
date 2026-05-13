@@ -9,7 +9,8 @@ fi
 DISTRIBUTION=$(grep "^ID" /etc/os-release | cut -d'=' -f2)
 CODENAME=$(grep "^VERSION_CODENAME" /etc/os-release | cut -d'=' -f2)
 
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ACCAF35C
+#apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ACCAF35C
+curl -L https://apt.insync.io/insynchq.gpg 2>/dev/null | gpg --dearmor | tee /etc/apt/trusted.gpg.d/insynchq.gpg 1>/dev/null
 
 echo "deb http://apt.insync.io/$DISTRIBUTION $CODENAME non-free contrib"\
     >/etc/apt/sources.list.d/insync.list
