@@ -15,6 +15,12 @@ FILE="tsetup.$VERSION.tar.xz"
 URL="https://updates.tdesktop.com/tlinux/$FILE"
 DIR=$(pwd)
 
+LOCAL_VERSION=$(cat /opt/telegram/version)
+if [ "$VERSION" = "$LOCAL_VERSION" ]; then
+	echo "A versão local do Telegram $VERSION já está atualizada."
+	exit 0
+fi
+
 cd /tmp
 sudo rm -f $FILE
 wget $URL
@@ -27,7 +33,7 @@ if [ $? -ne 0 ]; then
 fi
 
 cd /opt
-sudo rm -fr telegram-$VERSION
+sudo rm -fr telegram
 sudo tar -xJf /tmp/$FILE
 if [ $? -ne 0 ]; then
     echo >&2
@@ -38,12 +44,12 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-sudo mv Telegram telegram-$VERSION
-sudo rm -f telegram /usr/share/applications/telegram.desktop
-sudo ln -s telegram-$VERSION telegram
+sudo mv Telegram telegram
+sudo rm -f /usr/share/applications/telegram.desktop
 cd telegram
 sudo mv Telegram telegram
 sudo mv Updater updater
+echo "$VERSION" >version
 
 cat <<EOF >telegram.desktop
 [Desktop Entry]
@@ -51,9 +57,9 @@ Version=1.5
 Name=Telegram Desktop
 Comment=Official desktop version of Telegram messaging app
 Exec=/opt/telegram/telegram -- %u
-Icon=telegram
+Icon=org.telegram.desktop
 Terminal=false
-StartupWMClass=TelegramDesktop
+StartupWMClass=Telegram
 Type=Application
 Categories=Chat;Network;InstantMessaging;Qt;
 MimeType=x-scheme-handler/tg;
