@@ -9,10 +9,10 @@
 # Date:   2022-05-26
 #
 
-VERSION=$(curl -sv https://github.com/telegramdesktop/tdesktop/releases/latest 2>&1 \
-    | grep location: | cut -d/ -f8 | cut -dv -f2 | tr -d '\r\n')
-FILE="tsetup.$VERSION.tar.xz"
-URL="https://updates.tdesktop.com/tlinux/$FILE"
+VERSION=$(curl -s https://github.com/telegramdesktop/tdesktop/releases | \
+	grep "<li data-item-id" | head -1 | cut -d'"' -f2 | cut -d'-' -f2 | cut -d'v' -f2)
+FILE="td-setup-linux-x64-$VERSION.tar.xz"
+URL="https://github.com/telegramdesktop/tdesktop/releases/download/v$VERSION/$FILE"
 DIR=$(pwd)
 
 LOCAL_VERSION=$(cat /opt/telegram/version)
